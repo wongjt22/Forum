@@ -30,7 +30,10 @@ export default function CreateThreadModal({ isOpen, onClose, categories }: Creat
       return res.json();
     },
     onSuccess: () => {
+      // Invalidate all thread queries to refresh the list
       queryClient.invalidateQueries({ queryKey: ["/api/threads"] });
+      // Also invalidate categories to update thread counts
+      queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
       toast({
         title: "Thread created",
         description: "Your thread has been created successfully.",
