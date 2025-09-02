@@ -21,7 +21,14 @@ export default function HomePage() {
   });
 
   const { data: threads = [], isLoading } = useQuery<ThreadWithAuthorAndCategory[]>({
-    queryKey: ["/api/threads", selectedCategory, sortBy, searchTerm],
+    queryKey: [
+      "/api/threads",
+      {
+        categoryId: selectedCategory || undefined,
+        sortBy,
+        search: searchTerm || undefined,
+      },
+    ],
   });
 
   const handleSearch = (e: React.FormEvent) => {
