@@ -38,11 +38,11 @@ export interface IStorage {
   getPostsByThread(threadId: string): Promise<PostWithAuthor[]>;
   createPost(post: InsertPost & { authorId: string }): Promise<Post>;
   
-  sessionStore: session.SessionStore;
+  sessionStore: any;
 }
 
 export class DatabaseStorage implements IStorage {
-  sessionStore: session.SessionStore;
+  sessionStore: any;
 
   constructor() {
     this.sessionStore = new PostgresSessionStore({ 
@@ -118,14 +118,15 @@ export class DatabaseStorage implements IStorage {
       .innerJoin(users, eq(threads.authorId, users.id))
       .innerJoin(categories, eq(threads.categoryId, categories.id));
 
+    let whereConditions = [];
     if (categoryId) {
-      query = query.where(eq(threads.categoryId, categoryId));
+      whereConditions.push(eq(threads.categoryId, categoryId));
     }
-
     if (search) {
-      query = query.where(
-        ilike(threads.title, `%${search}%`)
-      );
+      whereConditions.push(ilike(threads.title, `%${search}%`));
+    }
+    if (whereConditions.length > 0) {
+      query = query.where(whereConditions.length === 1 ? whereConditions[0] : and(...whereConditions));
     }
 
     switch (sortBy) {

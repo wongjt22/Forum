@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import ThreadCard from "./thread-card";
+import ThreadCard from "@/components/thread-card";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ThreadWithAuthorAndCategory } from "@shared/schema";
